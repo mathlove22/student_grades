@@ -1,10 +1,14 @@
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
+import json
+
+# Streamlit Secrets에서 비밀 정보 읽기
+credentials_info = st.secrets["google"]["credentials"]
+credentials = Credentials.from_service_account_info(json.loads(credentials_info))
 
 # Google Sheets와 연결
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-credentials = Credentials.from_service_account_file(r'C:\Users\방송반\Documents\project02\indiviualsevice-fb746425b125.json', scopes=scope)
 gc = gspread.authorize(credentials)
 
 # Google Sheets에서 데이터 가져오기
