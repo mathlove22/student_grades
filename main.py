@@ -47,7 +47,9 @@ def login(student_id, password):
 # 비밀번호 변경 함수
 def change_password(student_id, new_password):
     global df
-    sheet.update('C2:C', df['Password'].tolist())  # 비밀번호 열의 위치에 맞게 수정
+    data_index = df[df['ID'] == student_id].index[0]
+    df.loc[data_index, 'Password'] = new_password
+    sheet.update_cell(data_index + 2, df.columns.get_loc('Password') + 1, new_password)  # Adjust cell index as needed
     st.success("비밀번호가 성공적으로 변경되었습니다!")
 
 if not st.session_state.logged_in:
@@ -61,7 +63,7 @@ if not st.session_state.logged_in:
             student = login(student_id, password)
             if student is not None:
                 st.success("로그인 성공!")
-                st.rerun()  # 즉시 페이지 새로고침
+                st.experimental_rerun()  # 즉시 페이지 새로고침
             else:
                 st.error("ID 또는 비밀번호가 잘못되었습니다.")
 else:
@@ -85,4 +87,4 @@ else:
     if st.button("로그아웃"):
         st.session_state.logged_in = False
         st.session_state.student_id = None
-        st.rerun()  # st.experimental_rerun() 대신 st.rerun() 사용
+        st.experimental_rerun()  # 페이지 새로고침
