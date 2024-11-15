@@ -28,7 +28,7 @@ sheet = gc.open_by_key('1S-Q7oBziDDd9C_sSQdZrbt6cbR0GvMJ4v43NYVvWOb8').sheet1
 df = pd.DataFrame(sheet.get_all_records())
 
 # Streamlit 사용자 인터페이스 설정
-st.title("성적 확인 및 비밀번호 변경 시스템")
+st.title("자율/진로/개인/종합사항 초안")
 
 # 세션 상태 초기화
 if 'logged_in' not in st.session_state:
@@ -70,7 +70,14 @@ else:
     # 학생 정보 및 비밀번호 변경 섹션
     student = df[df['ID'] == st.session_state.student_id].iloc[0]
     st.write(f"학생 이름 : {student['Name']}")
-    st.write(f"성적: {student['Grade']}")
+    st.write(f"자율활동기록: {student['A']}")
+    st.write(f"자율활동Byte(1500): {student['B']}")
+    st.write(f"진로활동기록: {student['C']}")
+    st.write(f"진로활동Byte(2100): {student['D']}")
+    st.write(f"개인특기기록: {student['E']}")
+    st.write(f"개인특기Byte(1500): {student['F']}")
+    st.write(f"종합평가기록: {student['G']}")
+    st.write(f"종합평가Byte(1500): {student['H']}")
     
     st.subheader("비밀번호 변경")
     with st.form("password_change_form"):
