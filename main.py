@@ -71,11 +71,11 @@ def update_password(student_id, new_password):
         # 비밀번호 업데이트
         sheet.update_cell(data_index + 2, df.columns.get_loc('Password') + 1, new_password)
         
-        # 캐시 무효화
-        load_sheet_data.clear()
+        # **캐시 무효화**
+        load_sheet_data.clear()  # 캐시된 데이터 비우기
         
-        # 데이터 재로드 (선택 사항)
-        st.session_state.updated_df = pd.DataFrame(sheet.get_all_records())
+        # **데이터 갱신**
+        st.session_state.updated_df = pd.DataFrame(sheet.get_all_records())  # 선택 사항
         
         return True
     except Exception as e:
