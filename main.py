@@ -71,16 +71,13 @@ def update_password(student_id, new_password):
         # 비밀번호 업데이트
         sheet.update_cell(data_index + 2, df.columns.get_loc('Password') + 1, new_password)
         
-        # **캐시 무효화**
-        load_sheet_data.clear()  # 캐시된 데이터 비우기
-        
-        # **데이터 갱신**
-        st.session_state.updated_df = pd.DataFrame(sheet.get_all_records())  # 선택 사항
-        
+        # 캐시 무효화 및 데이터 갱신
+        load_sheet_data.clear()  # 캐시를 비움
         return True
     except Exception as e:
         st.error(f"비밀번호 업데이트 중 오류가 발생했습니다: {str(e)}")
         return False
+
 
 
 def login(student_id, password, df):
@@ -115,10 +112,13 @@ if not st.session_state.logged_in:
         
         if submit_button:
             if login(student_id, password, df):
+                load_sheet_data.clear()  # 캐시를 무효화
+                df = load_sheet_data()  # 데이터를 새로 로드
                 st.success("로그인 성공!")
                 st.experimental_rerun()
             else:
                 st.error("ID 또는 비밀번호가 잘못되었습니다.")
+
 
 else:
     # 학생 정보 표시
@@ -162,10 +162,11 @@ else:
     col1, col2, col3 = st.columns([1, 1, 8])
     
     with col1:
-        if st.button("로그아웃"):
-            st.session_state.logged_in = False
-            st.session_state.student_id = None
-            st.experimental_rerun()
+    if st.button("로그아웃"):
+        st.session_state.logged_in = False
+        st.session_state.student_id = None
+        load_sheet_data.clear()  # 캐시를 무효화
+        st.experimental_rerun()
     
     with col2:
         if st.button("비밀번호 변경"):
