@@ -162,11 +162,11 @@ else:
     col1, col2, col3 = st.columns([1, 1, 8])
     
     with col1:
-    if st.button("로그아웃"):
-        st.session_state.logged_in = False
-        st.session_state.student_id = None
-        load_sheet_data.clear()  # 캐시를 무효화
-        st.experimental_rerun()
+        if st.button("로그아웃"):
+            st.session_state.logged_in = False
+            st.session_state.student_id = None
+            load_sheet_data.clear()  # 캐시를 무효화
+            st.experimental_rerun()
     
     with col2:
         if st.button("비밀번호 변경"):
