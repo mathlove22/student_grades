@@ -59,16 +59,29 @@ def load_sheet_data():
 
 def update_password(student_id, new_password):
     try:
+        # Google Sheets 인증 및 접근
         credentials = get_google_credentials()
         gc = gspread.authorize(credentials)
         sheet = gc.open_by_key('1S-Q7oBziDDd9C_sSQdZrbt6cbR0GvMJ4v43NYVvWOb8').sheet1
+        
+        # 데이터 로드
         df = pd.DataFrame(sheet.get_all_records())
         data_index = df[df['ID'] == student_id].index[0]
+        
+        # 비밀번호 업데이트
         sheet.update_cell(data_index + 2, df.columns.get_loc('Password') + 1, new_password)
+        
+        # 캐시 무효화
+        load_sheet_data.clear()
+        
+        # 데이터 재로드 (선택 사항)
+        st.session_state.updated_df = pd.DataFrame(sheet.get_all_records())
+        
         return True
     except Exception as e:
         st.error(f"비밀번호 업데이트 중 오류가 발생했습니다: {str(e)}")
         return False
+
 
 def login(student_id, password, df):
     if df is None:
